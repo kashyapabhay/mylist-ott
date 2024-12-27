@@ -22,7 +22,7 @@ export class MovieController {
   }
 
   @Post()
-  createMovie(@Body() createMovieDto: CreateMovieDto) {
+  async createMovie(@Body() createMovieDto: CreateMovieDto) {
     this.loggerService.log('createMovie called');
     return this.movieService.create(createMovieDto);
   }

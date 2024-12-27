@@ -21,6 +21,7 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     this.logger.log('Going to create a new user for userName: ' + createUserDto.username);
+    
     const newUser = await this.userModel.create(createUserDto);
     this.logger.log(`Successfully created user with userName: ${createUserDto.username}`);
     return newUser;

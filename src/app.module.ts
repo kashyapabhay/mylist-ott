@@ -4,12 +4,15 @@ import { AppService } from './app.service';
 import { LoggerModule } from './logger/logger.module';
 import { MovieModule } from './movie/movie.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
     LoggerModule,
     MovieModule,
-    MongooseModule.forRoot('mongodb+srv://dev:terminator_89@learning.y1x76.mongodb.net/test?retryWrites=true&w=majority'),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
   ],
   controllers: [AppController],
   providers: [AppService],

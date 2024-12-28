@@ -10,6 +10,7 @@ export class CreateMovieDto {
 }
 
 export class UpdateMovieDto {
+    movieId: number;
     title?: string;
     description?: string;
     genres?: Genre[];

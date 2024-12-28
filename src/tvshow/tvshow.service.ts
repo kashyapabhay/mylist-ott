@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateTVShowDto, UpdateTVShowDto } from './tvshow.dto';
 import { TVShow } from './tvshow.interface';
 import { LoggerService } from '../logger/logger.service'; // Add this import
+import {  TVShowNotFoundException } from './exceptions/tvshow.not.found.exception';
 
 @Injectable()
 export class TVShowService {
@@ -14,38 +15,57 @@ export class TVShowService {
 
   async createTVShow(createTVShowDto: CreateTVShowDto): Promise<TVShow> {
   
-    this.logger.log('Creating a new TV show'); // Log message
-    const createdTVShow = this.tvShowModel.create(createTVShowDto);
-    return createdTVShow;
+    this.logger.log('Creating a new TV show');
+    try {
+      const createdTVShow = new this.tvShowModel(createTVShowDto);
+      return await createdTVShow.save();
+    } catch (error) {
+      this.logger.error(`Error creating TV show: ${error.message}`, error.stack);
+      throw error;
+    }
   }
  
 
 
   async getTVShow(tvShowId: string): Promise<TVShow> {
     this.logger.log(`Fetching TV show with id: ${tvShowId}`);
-    const tvShow = await this.tvShowModel.findById(tvShowId).exec();
-    if (!tvShow) {
-      throw new Error('TV Show not found');
+    try {
+      const tvShow = await this.tvShowModel.findById(tvShowId).exec();
+      if (!tvShow) {
+        throw new TVShowNotFoundException('TV Show not found');
+      }
+      return tvShow;
+    } catch (error) {
+      this.logger.error(`Error fetching TV show: ${error.message}`, error.stack);
+      throw error;
     }
-    return tvShow;
   }
 
   async updateTVShow(tvShowId: string, updateTVShowDto: UpdateTVShowDto): Promise<TVShow> {
     this.logger.log(`Updating TV show with id: ${tvShowId}`);
-    const updatedTVShow = await this.tvShowModel.findByIdAndUpdate(tvShowId, updateTVShowDto, { new: true }).exec();
-    if (!updatedTVShow) {
-      throw new Error('TV Show not found');
+    try {
+      const updatedTVShow = await this.tvShowModel.findByIdAndUpdate(tvShowId, updateTVShowDto, { new: true }).exec();
+      if (!updatedTVShow) {
+        throw new TVShowNotFoundException('TV Show not found');
+      }
+      return updatedTVShow;
+    } catch (error) {
+      this.logger.error(`Error updating TV show: ${error.message}`, error.stack);
+      throw error;
     }
-    return updatedTVShow;
   }
 
-  async removeTVShow(tvShowId: string): Promise<TVShow> {
+  async removeTVShow(tvShowId: string): Promise<void> {
     this.logger.log(`Removing TV show with id: ${tvShowId}`);
-    const result = await this.tvShowModel.findByIdAndDelete(tvShowId);
-    if (!result) {
-      throw new Error('TV Show not found');
+    try {
+      const result = await this.tvShowModel.findByIdAndDelete(tvShowId);
+      if (!result) {
+        throw new TVShowNotFoundException('TV Show not found');
+      }
+    } catch (error) {
+      this.logger.error(`Error removing TV show: ${error.message}`, error.stack);
+      throw error;
     }
-    return result;
   }
 
 }

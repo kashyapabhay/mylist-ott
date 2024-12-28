@@ -19,51 +19,57 @@ export class UserService {
     this.logger = logger;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async addUser(createUserDto: CreateUserDto): Promise<User> {
     this.logger.log('Going to create a new user for userName: ' + createUserDto.username);
-    
+
     const newUser = await this.userModel.create(createUserDto);
     this.logger.log(`Successfully created user with userName: ${createUserDto.username}`);
     return newUser;
   }
 
-  async findAll(): Promise<User[]> {
-    this.logger.log('Finding all users');
-    const users = await this.userModel.find().exec();
-    this.logger.log('Successfully found all users');
-    return users;
-  }
 
-  async exist(id: string): Promise<User | null> {
+
+  async getUser(id: string): Promise<User | null> {
     this.logger.log(`Finding user with id: ${id}`);
-    const user = await this.userModel.findById(id).exec();
-    if (user) {
-      this.logger.log(`Successfully found user with id: ${id}`);
-    } else {
-      throw new UserNotFoundException(`User with id: ${id} not found`);
+    try {
+      const user = await this.userModel.findById(id);
+      if (!user) {
+        throw new UserNotFoundException('User not found');
+      }
+      return user;
+    } catch (error) {
+      this.logger.error(`Error fetching user: ${error.message}`, error.stack);
+      throw error;
     }
-    return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
     this.logger.log(`Updating user with id: ${id}`);
-    const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
-    if (updatedUser) {
-      this.logger.log(`Successfully updated user with id: ${id}`);
-    } else {
-      this.logger.log(`Failed to update user with id: ${id}`);
+    try {
+      const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
+      if (updatedUser) {
+        this.logger.log(`Successfully updated user with id: ${id}`);
+      } else {
+        this.logger.error(`Failed to update user with id: ${id}`, "");
+        throw new UserNotFoundException('User not found');
+      }
+      return updatedUser;
+    } catch (error) {
+      this.logger.error(`Error updating user: ${error.message}`, error.stack);
+      throw error;
     }
-    return updatedUser;
   }
 
-  async delete(id: string): Promise<User | null> {
+  async deleteUser(id: string): Promise<void> {
     this.logger.log(`Deleting user with id: ${id}`);
-    const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
-    if (deletedUser) {
+    try {
+      await this.userModel.findByIdAndDelete(id).exec();
+
       this.logger.log(`Successfully deleted user with id: ${id}`);
-    } else {
-      this.logger.log(`Failed to delete user with id: ${id}`);
+    } catch (error) {
+      this.logger.error(`Error deleting user: ${error.message}`, error.stack);
+      throw error;
     }
-    return deletedUser;
+
   }
 }

@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { Genre } from "src/global.types";
+import { IsNotNull } from "src/validator/not-null.validator";
 
 
 class WatchHistoryDto {
@@ -51,6 +52,7 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto {
+  
   @IsString()
   @IsOptional()
   readonly username?: string;

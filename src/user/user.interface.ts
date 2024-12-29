@@ -5,7 +5,7 @@ import { Genre } from 'src/global.types';
 export interface User  {
   id: string;
   username: string;
-  preferences: {
+  preferences?: {
     favoriteGenres: Genre[];
     dislikedGenres: Genre[];
   };

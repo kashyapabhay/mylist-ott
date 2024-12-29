@@ -46,6 +46,10 @@ export class UserService {
       }
       return user;
     } catch (error) {
+      if (error instanceof UserNotFoundException) {
+        this.logger.error(`User not found: ${id}`, error.stack);
+        throw error;
+      }
       this.logger.error(`Error fetching user: ${error.message}`, error.stack);
       throw new DatabaseException(`Error while fetching user: ${id}`, error);
     }
@@ -57,7 +61,7 @@ export class UserService {
       throw new InvaldUserIdException('id cannot be null or undefined');
     }
     try {
-      const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
+      const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
       if (updatedUser) {
         this.logger.log(`Successfully updated user with id: ${id}`);
       } else {
@@ -66,6 +70,9 @@ export class UserService {
       }
       return updatedUser;
     } catch (error) {
+      if (error instanceof UserNotFoundException) {
+        throw error;
+      }
       this.logger.error(`Error updating user: ${error.message}`, error.stack);
       throw new DatabaseException(`Error while updating user: ${id}`, error);
     }
@@ -77,7 +84,7 @@ export class UserService {
       throw new InvaldUserIdException('id cannot be null or undefined');
     }
     try {
-      await this.userModel.findByIdAndDelete(id).exec();
+      await this.userModel.findByIdAndDelete(id);
       this.logger.log(`Successfully deleted user with id: ${id}`);
     } catch (error) {
       this.logger.error(`Error deleting user: ${error.message}`, error.stack);

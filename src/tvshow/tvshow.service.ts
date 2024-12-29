@@ -36,13 +36,16 @@ export class TVShowService {
       throw new InvalidTVShowIdException('Movie id cannot be null or undefined');
     }
     try {
-      const tvShow = await this.tvShowModel.findById(tvShowId).exec();
+      const tvShow = await this.tvShowModel.findById(tvShowId);
       if (!tvShow) {
         throw new TVShowNotFoundException('TV Show not found');
       }
       return tvShow;
     } catch (error) {
       this.logger.error(`Error fetching TV show: ${error.message}`, error.stack);
+      if (error instanceof TVShowNotFoundException) {
+        throw error;
+      }
       throw new DatabaseException(`Error while fetching TV show: ${tvShowId}`, error);
     }
   }
@@ -53,13 +56,16 @@ export class TVShowService {
       throw new InvalidTVShowIdException('Movie id cannot be null or undefined');
     }
     try {
-      const updatedTVShow = await this.tvShowModel.findByIdAndUpdate(tvShowId, updateTVShowDto, { new: true }).exec();
+      const updatedTVShow = await this.tvShowModel.findByIdAndUpdate(tvShowId, updateTVShowDto, { new: true });
       if (!updatedTVShow) {
         throw new TVShowNotFoundException('TV Show not found');
       }
       return updatedTVShow;
     } catch (error) {
       this.logger.error(`Error updating TV show: ${error.message}`, error.stack);
+      if (error instanceof TVShowNotFoundException) {
+        throw error;
+      }
       throw new DatabaseException(`Error while updating TV show: ${tvShowId}`, error);
     }
   }
@@ -76,6 +82,9 @@ export class TVShowService {
       }
     } catch (error) {
       this.logger.error(`Error removing TV show: ${error.message}`, error.stack);
+      if (error instanceof TVShowNotFoundException) {
+        throw error;
+      }
       throw new DatabaseException(`Error while removing TV show: ${tvShowId}`, error);
     }
   }

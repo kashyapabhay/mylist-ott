@@ -14,3 +14,13 @@ export const UserSchema = new mongoose.Schema({
     },
   ],
 });
+
+// Add a toJSON transformation to map _id to id
+UserSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+  },
+});

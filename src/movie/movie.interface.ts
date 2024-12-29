@@ -1,6 +1,6 @@
 import { Genre } from "src/global.types";
 
-interface Movie {
+export interface Movie {
     id: string;
     title: string;
     description: string;

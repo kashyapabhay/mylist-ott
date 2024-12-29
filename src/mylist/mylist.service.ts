@@ -26,26 +26,18 @@ export class MyListService {
     this.logger.log('Adding item to MyList for user with id: ' + userId + 'and contentId: ' + createMyListDto.contentId); 
 
     // Check from user service if user exists
-    let userExists;
-    try {
-      userExists = await this.userService.getUser(userId);
-    } catch (error) {
-      this.logger.error('Error fetching user with id: ' + userId, error.stack);
-      if (error instanceof UserNotFoundException) {
-        throw error;
-      }
-    }
+    await this.validateUser(userId);
    
     // Find the user's list or create a new one if it doesn't exist
     let myList;
     try {
       myList = await this.myListModel.findOne({ userId });
+      if (!myList) {
+        myList = new this.myListModel({ userId, items: [] });
+      }
     } catch (error) {
       this.logger.error('Error fetching MyList for user with id: ' + userId, error.stack);
       throw new InternalServerErrorException('Error fetching MyList');
-    }
-    if (!myList) {
-      myList = new this.myListModel({ userId, items: [] });
     }
 
     // Validate contentId based on contentType
@@ -74,10 +66,8 @@ export class MyListService {
     this.logger.log(`Removing item with contentId: ${contentId} from MyList for user with id: ${userId}`);
 
     // Check from user service if user exists
-    const userExists = await this.userService.getUser(userId);
-    if (!userExists) {
-      throw new ListNotFoundException('User not found');
-    }
+    
+    await this.validateUser(userId);
 
     // Validate contentId 
     const movie = await this.movieService.getMovie(contentId);
@@ -109,11 +99,7 @@ export class MyListService {
     this.logger.log(`Listing items for user with id: ${userId}`);
 
     // Check from user service if user exists
-    const userExists = await this.userService.getUser(userId);
-    if (!userExists) {
-      throw new ListNotFoundException('User not found');
-    }
-
+    this.validateUser(userId);
     // Check if the user's list exists
     let myList;
     try {
@@ -128,5 +114,19 @@ export class MyListService {
 
     const skip = (page - 1) * limit;
     return this.myListModel.find({ userId }).skip(skip).limit(limit).exec();
+  }
+  private async validateUser(userId: string): Promise<void> {
+    try {
+      const userExists = await this.userService.getUser(userId);
+      if (!userExists) {
+        throw new UserNotFoundException("User not found");
+      }
+    } catch (error) {
+      this.logger.error('Error fetching user with id: ' + userId, error.stack);
+      if (error instanceof UserNotFoundException) {
+        throw error;
+      }
+      throw new Error('An unexpected error occurred while validating the user');
+    }
   }
 }

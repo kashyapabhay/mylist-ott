@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { LoggerService } from 'src/logger/logger.service';
 import { CreateMovieDto, UpdateMovieDto } from './movie.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Movie } from './movie.schema';
 import { Model } from 'mongoose';
 import { MovieNotFoundException } from './exceptions/movie.not.found.exception';
+import { Movie } from './movie.interface';
 
 @Injectable()
 export class MovieService {
     constructor(
-        @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
+        @InjectModel('Movie') private readonly movieModel: Model<Movie>,
         private readonly loggerService: LoggerService) { }
 
 

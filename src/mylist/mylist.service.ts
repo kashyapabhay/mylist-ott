@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MyList } from './mylist.interface';
-import { CreateMyListDto } from './create-mylist.dto';
+import { CreateMyListDto } from './mylist.dto';
 import { LoggerService } from '../logger/logger.service';
 import { ListNotFoundException } from './exceptions/list-not-found.exception';
 import { UserService } from '../user/user.service';

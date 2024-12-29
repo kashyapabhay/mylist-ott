@@ -1,6 +1,6 @@
 import { Controller, Post, Delete, Get, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { MyListService } from './mylist.service';
-import { CreateMyListDto } from './create-mylist.dto';
+import { CreateMyListDto } from './mylist.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('mylist')

@@ -1,8 +1,18 @@
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { ContentType } from './mylist.enum';
 
+
 export class CreateMyListDto {
+  @IsString()
+  @IsNotEmpty()
   readonly userId: string;
+
+  @IsString()
+  @IsNotEmpty()
   readonly contentId: string;
+
+  @IsEnum(ContentType)
+  @IsNotEmpty()
   readonly contentType: ContentType;
 
   constructor(userId: string, contentId: string, contentType: ContentType) {

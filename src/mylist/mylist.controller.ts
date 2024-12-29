@@ -7,8 +7,8 @@ export class MyListController {
   constructor(private readonly myListService: MyListService) {}
 
   @Post()
-  async addToMyList(@Query('userId') userId: string, @Body() createMyListDto: CreateMyListDto) {
-    return this.myListService.addToMyList(userId, createMyListDto);
+  async addToMyList( @Body() createMyListDto: CreateMyListDto) {
+    return this.myListService.addToMyList( createMyListDto);
   }
 
   @Delete(':id')

@@ -8,13 +8,13 @@ const API_URL = 'http://localhost:3000/movies';
 const csvWriter = createCsvWriter({
   path: 'movies.csv',
   header: [
-    { id: 'id', title: 'ID' },
-    { id: 'title', title: 'Title' },
-    { id: 'description', title: 'Description' },
-    { id: 'genres', title: 'Genres' },
-    { id: 'releaseDate', title: 'Release Date' },
-    { id: 'director', title: 'Director' },
-    { id: 'actors', title: 'Actors' },
+    { id: 'id', title: 'id' },
+    { id: 'title', title: 'title' },
+    { id: 'description', title: 'description' },
+    { id: 'genres', title: 'genres' },
+    { id: 'releaseDate', title: 'release_date' },
+    { id: 'director', title: 'director' },
+    { id: 'actors', title: 'actors' },
   ],
 });
 async function createMovie(movie) {

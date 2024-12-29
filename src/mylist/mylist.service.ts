@@ -22,9 +22,9 @@ export class MyListService {
     private readonly tvShowService: TVShowService,
   ) { }
 
-  async addToMyList(userId: string, createMyListDto: CreateMyListDto): Promise<MyList> {
-    this.logger.log('Adding item to MyList for user with id: ' + userId + 'and contentId: ' + createMyListDto.contentId); 
-
+  async addToMyList( createMyListDto: CreateMyListDto): Promise<MyList> {
+    this.logger.log('Adding item to MyList for user with id: ' + createMyListDto.userId + 'and contentId: ' + createMyListDto.contentId); 
+    const userId = createMyListDto.userId
     // Check from user service if user exists
     await this.validateUser(userId);
    

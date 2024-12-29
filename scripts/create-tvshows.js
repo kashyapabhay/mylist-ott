@@ -8,11 +8,11 @@ const API_URL = 'http://localhost:3000/tvshows';
 const csvWriter = createCsvWriter({
   path: 'tvshows.csv',
   header: [
-    { id: 'id', title: 'ID' },
-    { id: 'title', title: 'Title' },
-    { id: 'description', title: 'Description' },
-    { id: 'genres', title: 'Genres' },
-    { id: 'episodes', title: 'Episodes' },
+    { id: 'id', title: 'id' },
+    { id: 'title', title: 'title' },
+    { id: 'description', title: 'description' },
+    { id: 'genres', title: 'genres' },
+    { id: 'episodes', title: 'episodes' },
   ],
 });
 

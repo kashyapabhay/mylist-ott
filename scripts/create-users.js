@@ -8,13 +8,13 @@ const API_URL = 'http://localhost:3000/users';
 const csvWriter = createCsvWriter({
   path: 'users.csv',
   header: [
-    { id: 'id', title: 'ID' },
-    { id: 'username', title: 'Username' },
-    { id: 'favoriteGenres', title: 'Favorite Genres' },
-    { id: 'dislikedGenres', title: 'Disliked Genres' },
-    { id: 'contentId', title: 'Content ID' },
-    { id: 'watchedOn', title: 'Watched On' },
-    { id: 'rating', title: 'Rating' },
+    { id: 'id', title: 'id' },
+    { id: 'username', title: 'username' },
+    { id: 'favoriteGenres', title: 'favourite_genres' },
+    { id: 'dislikedGenres', title: 'disliked_generes' },
+    { id: 'contentId', title: 'content_id' },
+    { id: 'watchedOn', title: 'watched_on' },
+    { id: 'rating', title: 'rating' },
   ],
 });
 

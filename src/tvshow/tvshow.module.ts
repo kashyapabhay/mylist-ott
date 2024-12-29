@@ -13,6 +13,7 @@ import { LoggerService } from 'src/logger/logger.service';
   ],
   controllers: [TVShowController],
   providers: [TVShowService, LoggerService],
+  exports: [TVShowService],
 })
 export class TVShowModule implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {

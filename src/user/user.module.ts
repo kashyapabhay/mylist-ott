@@ -13,6 +13,7 @@ import { LoggerService } from 'src/logger/logger.service';
   ],
   controllers: [UserController],
   providers: [UserService,LoggerService],
+  exports: [UserService],
 })
 export class UserModule implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(UserModule.name);

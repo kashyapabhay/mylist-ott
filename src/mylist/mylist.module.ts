@@ -5,14 +5,21 @@ import { MyListController } from './mylist.controller';
 import { MyListSchema } from './mylist.schema';
 import { LoggerService } from '../logger/logger.service';
 import { LoggerModule } from '../logger/logger.module';
+import { MovieModule } from 'src/movie/movie.module';
+import { TVShowModel } from 'src/tvshow/tvshow.schema';
+import { TVShowModule } from 'src/tvshow/tvshow.module';
+import { UserService } from 'src/user/user.service';
+import { UserModule } from 'src/user/user.module';
+import { MovieService } from 'src/movie/movie.service';
+import { TVShowService } from 'src/tvshow/tvshow.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'MyList', schema: MyListSchema }]),
-    LoggerModule,
+    LoggerModule,MovieModule,TVShowModule,UserModule,
   ],
   controllers: [MyListController],
-  providers: [MyListService],
+  providers: [MyListService,LoggerService,],
 })
 export class MyListModule implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(MyListModule.name);

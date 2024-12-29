@@ -1,6 +1,8 @@
 import * as mongoose from 'mongoose';
+import { User } from './user.interface';
+import { Schema, model } from 'mongoose';
 
-export const UserSchema = new mongoose.Schema({
+export const UserSchema = new Schema({
   username: { type: String, required: true },
   preferences: {
     favoriteGenres: [{ type: String, enum: ['Action', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Romance', 'SciFi'] }],
@@ -24,3 +26,4 @@ UserSchema.set('toJSON', {
     delete ret._id;
   },
 });
+export const UserModel = model<User & Document>('User', UserSchema);

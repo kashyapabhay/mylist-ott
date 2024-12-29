@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as dotenv from 'dotenv';
 import { UserModule } from './user/user.module';
 import { TVShowModule } from './tvshow/tvshow.module';
+import { MyListModule } from './mylist/mylist.module';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ dotenv.config();
     MovieModule,
     UserModule,
     TVShowModule,
+    MyListModule,
     MongooseModule.forRoot(process.env.MONGODB_URI),
   ],
   controllers: [AppController],

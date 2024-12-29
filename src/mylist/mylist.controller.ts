@@ -19,7 +19,7 @@ export class MyListController {
   }
 
   @Get()
-  async listMyItems(@Query('userId') userId: string, @Query('page') page: number, @Query('limit') limit: number) {
-    return this.myListService.listMyItems(userId, page, limit);
+  async listMyItems(@Query('userId') userId: string, @Query('page') page: number) {
+    return this.myListService.listMyItems(userId, page);
   }
 }

@@ -14,11 +14,12 @@ import { MovieService } from 'src/movie/movie.service';
 import { TVShowService } from 'src/tvshow/tvshow.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthModule } from 'src/auth/auth.module';
+import { RedisCacheModule } from 'src/rediscache/redis.cache.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'MyList', schema: MyListSchema }]),
-    LoggerModule,MovieModule,TVShowModule,UserModule,AuthModule,
+    LoggerModule,MovieModule,TVShowModule,UserModule,AuthModule,RedisCacheModule,
   ],
   controllers: [MyListController],
   providers: [MyListService,LoggerService,],

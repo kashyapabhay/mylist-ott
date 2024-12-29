@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const API_URL = 'http://localhost:3000/users';
+const JWT_TOKEN = 'may-the-force-be-with-you';
 
 const csvWriter = createCsvWriter({
   path: 'users.csv',
@@ -18,11 +19,13 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-
-
 async function createUser(user) {
   try {
-    const response = await axios.post(API_URL, user);
+    const response = await axios.post(API_URL, user, {
+      headers: {
+        Authorization: `Bearer ${JWT_TOKEN}`,
+      },
+    });
     const responseData = JSON.stringify(response.data, null, 2);
     console.log(`User created with ID: ${response.data.id}`);
     console.log('Response JSON:', responseData);

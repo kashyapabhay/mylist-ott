@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const API_URL = 'http://localhost:3000/movies';
-
+const JWT_TOKEN = 'may-the-force-be-with-you';
 const csvWriter = createCsvWriter({
   path: 'movies.csv',
   header: [
@@ -19,7 +19,11 @@ const csvWriter = createCsvWriter({
 });
 async function createMovie(movie) {
   try {
-    const response = await axios.post(API_URL, movie);
+    const response = await axios.post(API_URL, movie, {
+      headers: {
+        Authorization: `Bearer ${JWT_TOKEN}`,
+      },
+    });
     const responseData = JSON.stringify(response.data, null, 2);
     console.log(`Movie created with ID: ${response.data.id}`);
     console.log('Response JSON:', responseData);
@@ -61,6 +65,6 @@ async function createMovies(count) {
   console.log('Finished creating movies and saving to CSV');
 }
 
-createMovies(100).then(() => {
+createMovies(1).then(() => {
   console.log('Script execution completed');
 });

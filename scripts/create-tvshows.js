@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const API_URL = 'http://localhost:3000/tvshows';
+const JWT_TOKEN = 'may-the-force-be-with-you';
 
 const csvWriter = createCsvWriter({
   path: 'tvshows.csv',
@@ -16,11 +17,13 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-
-
 async function createTVShow(tvShow) {
   try {
-    const response = await axios.post(API_URL, tvShow);
+    const response = await axios.post(API_URL, tvShow, {
+      headers: {
+        Authorization: `Bearer ${JWT_TOKEN}`,
+      },
+    });
     const responseData = JSON.stringify(response.data, null, 2);
     console.log(`TV Show created with ID: ${response.data.id}`);
     console.log('Response JSON:', responseData);
@@ -57,7 +60,9 @@ async function createTVShows(count) {
         title: createdTVShow.title,
         description: createdTVShow.description,
         genres: createdTVShow.genres.join(', '),
-        episodes: createdTVShow.episodes.map(episode => `S${episode.seasonNumber}E${episode.episodeNumber}`).join(', '),
+        episodes: createdTVShow.episodes
+          .map((episode) => `S${episode.seasonNumber}E${episode.episodeNumber}`)
+          .join(', '),
       });
     }
   }

@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { TVShowService } from './tvshow.service';
 import { CreateTVShowDto, UpdateTVShowDto } from './tvshow.dto';
 import { TVShow } from './tvshow.interface';
 import { LoggerService } from 'src/logger/logger.service';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('tvshows')
+@UseGuards(JwtAuthGuard)
 class TVShowController {
   constructor(
     private readonly tvShowService: TVShowService,

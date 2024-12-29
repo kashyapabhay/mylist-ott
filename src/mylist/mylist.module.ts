@@ -12,11 +12,13 @@ import { UserService } from 'src/user/user.service';
 import { UserModule } from 'src/user/user.module';
 import { MovieService } from 'src/movie/movie.service';
 import { TVShowService } from 'src/tvshow/tvshow.service';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'MyList', schema: MyListSchema }]),
-    LoggerModule,MovieModule,TVShowModule,UserModule,
+    LoggerModule,MovieModule,TVShowModule,UserModule,AuthModule,
   ],
   controllers: [MyListController],
   providers: [MyListService,LoggerService,],

@@ -1,8 +1,10 @@
-import { Controller, Post, Delete, Get, Body, Param, Query } from '@nestjs/common';
+import { Controller, Post, Delete, Get, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { MyListService } from './mylist.service';
 import { CreateMyListDto } from './create-mylist.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('mylist')
+@UseGuards(JwtAuthGuard)
 export class MyListController {
   constructor(private readonly myListService: MyListService) {}
 

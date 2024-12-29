@@ -6,6 +6,7 @@ const { ConsoleLogger } = require('@nestjs/common');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const API_URL = 'http://localhost:3000/mylist/';
+const JWT_TOKEN = 'may-the-force-be-with-you';
 
 const csvWriter = createCsvWriter({
   path: 'mylist.csv',
@@ -16,10 +17,13 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-
 async function addToMylist(mylistItem) {
   try {
-    const response = await axios.post(API_URL, mylistItem);
+    const response = await axios.post(API_URL, mylistItem, {
+      headers: {
+        Authorization: `Bearer ${JWT_TOKEN}`,
+      },
+    });
     const responseData = JSON.stringify(response.data, null, 2);
     console.log(`Added to MyList: ${response.data.id}`);
     console.log('Response JSON:', responseData);
@@ -56,10 +60,13 @@ async function generateMylistData() {
     const user = users[i % users.length];
     console.log(`User id : ${user.id}`);
     const contentType = i % 2 === 0 ? 'Movie' : 'TVShow';
-    const content = contentType === 'Movie'
-      ? movies[i % movies.length]
-      : tvshows[i % tvshows.length];
-    console.log(`Adding to MyList: User ID ${user.id}, Content ID ${content.id}, Content Type ${contentType}`);
+    const content =
+      contentType === 'Movie'
+        ? movies[i % movies.length]
+        : tvshows[i % tvshows.length];
+    console.log(
+      `Adding to MyList: User ID ${user.id}, Content ID ${content.id}, Content Type ${contentType}`,
+    );
     const mylistItem = {
       userId: user.id,
       contentId: content.id,

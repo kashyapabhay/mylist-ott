@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import { UserModule } from './user/user.module';
 import { TVShowModule } from './tvshow/tvshow.module';
 import { MyListModule } from './mylist/mylist.module';
+import { AuthModule } from './auth/auth.module';
 
 dotenv.config();
 
@@ -18,9 +19,12 @@ dotenv.config();
     UserModule,
     TVShowModule,
     MyListModule,
+    AuthModule,
     MongooseModule.forRoot(process.env.MONGODB_URI),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule { }

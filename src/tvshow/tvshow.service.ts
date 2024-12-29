@@ -10,9 +10,9 @@ import { InvalidTVShowIdException } from './exceptions/invalid.tvshow.id.excepti
 
 @Injectable()
 export class TVShowService {
+  private readonly logger = new LoggerService(TVShowService.name); // Create a new instance of LoggerService
   constructor(
     @InjectModel('TVShow') private readonly tvShowModel: Model<TVShow>,
-    private readonly logger: LoggerService, // Inject LoggerService
   ) { }
 
   async createTVShow(createTVShowDto: CreateTVShowDto): Promise<TVShow> {

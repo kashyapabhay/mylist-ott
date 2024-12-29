@@ -9,9 +9,9 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Controller('tvshows')
 @UseGuards(JwtAuthGuard)
 class TVShowController {
+  private readonly logger : LoggerService  = new LoggerService('TVShowController');
   constructor(
     private readonly tvShowService: TVShowService,
-    private readonly logger: LoggerService, // Inject LoggerService
   ) {}
 
   @Post()

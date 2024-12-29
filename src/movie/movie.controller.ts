@@ -7,12 +7,13 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Controller('movies')
 @UseGuards(JwtAuthGuard)
 export class MovieController {
-
+  private readonly loggerService : LoggerService;
   constructor(
     private readonly movieService: MovieService,
-    private readonly loggerService: LoggerService
-  ) {}
-  
+  ) {
+    this.loggerService = new LoggerService('MovieController');
+  }
+
   @Get(':id')
   getMovieById(@Param('id') id: string) {
     this.loggerService.log(`getMovieById called with id ${id}`);

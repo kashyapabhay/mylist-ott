@@ -14,7 +14,7 @@ import { AuthModule } from 'src/auth/auth.module';
     AuthModule,
   ],
   controllers: [TVShowController],
-  providers: [TVShowService, LoggerService],
+  providers: [TVShowService],
   exports: [TVShowService],
 })
 export class TVShowModule implements OnModuleInit, OnModuleDestroy {

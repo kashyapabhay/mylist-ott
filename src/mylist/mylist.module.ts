@@ -22,7 +22,7 @@ import { RedisCacheModule } from 'src/rediscache/redis.cache.module';
     LoggerModule,MovieModule,TVShowModule,UserModule,AuthModule,RedisCacheModule,
   ],
   controllers: [MyListController],
-  providers: [MyListService,LoggerService,],
+  providers: [MyListService],
 })
 export class MyListModule implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(MyListModule.name);

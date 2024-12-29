@@ -10,9 +10,11 @@ import { DATABASE_EXCEPTION, DatabaseException } from 'src/exceptions/database.e
 
 @Injectable()
 export class MovieService {
+    private readonly loggerService: LoggerService;
     constructor(
-        @InjectModel('Movie') private readonly movieModel: Model<Movie>,
-        private readonly loggerService: LoggerService) { }
+        @InjectModel('Movie') private readonly movieModel: Model<Movie>) {
+        this.loggerService = new LoggerService('MovieService');
+    }
 
 
     async getMovie(id: string): Promise<Movie> {

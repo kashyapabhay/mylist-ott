@@ -21,10 +21,9 @@ import { InvalidTVShowIdException } from 'src/tvshow/exceptions/invalid.tvshow.i
 export class MyListService {
   private readonly enableRedisCache: boolean;
   private readonly cacheExpirationMinutes: number;
-
+  private readonly logger = new LoggerService(MyListService.name);
   constructor(
     @InjectModel('MyList') private readonly myListModel: Model<MyList>,
-    private readonly logger: LoggerService,
     private readonly userService: UserService,
     private readonly movieService: MovieService,
     private readonly tvShowService: TVShowService,

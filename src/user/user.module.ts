@@ -12,7 +12,7 @@ import { LoggerService } from 'src/logger/logger.service';
     LoggerModule,
   ],
   controllers: [UserController],
-  providers: [UserService,LoggerService],
+  providers: [UserService],
   exports: [UserService],
 })
 export class UserModule implements OnModuleInit, OnModuleDestroy {

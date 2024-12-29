@@ -11,14 +11,12 @@ import { InvaldUserIdException } from './exceptions/invalid.user.id.exception';
 @Injectable()
 export class UserService {
   private readonly userModel: Model<User>;
-  private readonly logger: LoggerService;
+  private readonly logger: LoggerService = new LoggerService(UserService.name);
 
   constructor(
-    @InjectModel('User') userModel: Model<User>,
-    logger: LoggerService
+    @InjectModel('User') userModel: Model<User>
   ) {
     this.userModel = userModel;
-    this.logger = logger;
   }
 
   async addUser(createUserDto: CreateUserDto): Promise<User> {

@@ -4,14 +4,17 @@ import * as winston from 'winston';
 @Injectable()
 export class LoggerService {
   private logger: winston.Logger;
+  private context?: string;
 
-  constructor() {
+
+  constructor(context?: string) {
+    this.context = context;
     this.logger = winston.createLogger({
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.printf(({ timestamp, level, message }) => {
-          return `${timestamp} [${level}]: ${message}`;
+          return `${timestamp} [${level}]${this.context ? ` [${this.context}]` : ''}: ${message}`;
         })
       ),
       transports: [

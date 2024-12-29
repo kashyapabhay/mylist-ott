@@ -14,7 +14,7 @@ import { AuthModule } from 'src/auth/auth.module';
     AuthModule
   ],
   controllers: [MovieController],
-  providers: [MovieService, LoggerService],
+  providers: [MovieService],
   exports: [MovieService],
 })
 export class MovieModule { }

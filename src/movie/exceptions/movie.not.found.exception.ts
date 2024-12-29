@@ -1,6 +1,6 @@
+import { MOVIE_NOT_FOUND_ERROR } from "../movie.module.constants";
 import { MovieServiceBaseException } from "./movie.service.base.exception";
 
-export const MOVIE_NOT_FOUND_ERROR = "01";
 
 export class MovieNotFoundException extends MovieServiceBaseException {
     

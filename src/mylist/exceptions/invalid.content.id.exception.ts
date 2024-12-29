@@ -3,9 +3,12 @@ import { MyListServiceBaseException } from './mylist.service.base.exception';
 export const INVALID_CONTENT_ID_ERROR = "02";
 
 export class InvalidContentIdException extends MyListServiceBaseException {
-  constructor(message: string) {
-          super(INVALID_CONTENT_ID_ERROR,message);
-          this.name = "InvalidContentIdException";
-          this.message=message;
-      }
+
+  constructor(message: string, error: Error) {
+    super(INVALID_CONTENT_ID_ERROR, message);
+    this.name = "InvalidContentIdException";
+    this.message = message;
+    this.stack = error.stack;
+  }
+
 }

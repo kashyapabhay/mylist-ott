@@ -1,6 +1,5 @@
+import { TVSHOW_NOT_FOUND_ERROR } from "../tvshow.module.constants";
 import { TVShowServiceBaseException } from "./tvshow.service.base.exception";
-
-export const TVSHOW_NOT_FOUND_ERROR = "01";
 
 export class TVShowNotFoundException extends TVShowServiceBaseException {
     

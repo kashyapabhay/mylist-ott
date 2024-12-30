@@ -58,7 +58,10 @@ export class MyListService {
       myList = await this.myListModel.findOne({ userId });
       if (!myList) {
         this.logger.debug('MyList not found for user with id: ' + userId + '. Creating a new one');
-        myList =  this.myListModel.create({ userId, items: [] });
+        myList = await this.myListModel.create({ userId, items: [] });
+        this.logger.debug(`MyList created with id ${myList._id}for user with id: ${userId}  `);
+      }else{
+        this.logger.debug(`MyList found with id ${myList._id}for user with id: ${userId}  `);
       }
     } catch (error) {
       this.logger.error('Error fetching MyList for user with id: ' + userId, error.stack);
@@ -68,23 +71,40 @@ export class MyListService {
     this.logger.debug('Validating contentId: ' + createMyListDto.contentId);
     // Validate contentId based on contentType
     if (createMyListDto.contentType === 'Movie') {
-      const movie = await this.movieService.getMovie(createMyListDto.contentId);
-      if (!movie) {
-        throw new InvalidContentIdException('Invalid content Id', null);
+      try {
+        const movie = await this.movieService.getMovie(createMyListDto.contentId);
+        if (!movie) {
+          this.logger.error('Movie not found.Invalid content Id: ' + createMyListDto.contentId, "");
+          throw new InvalidContentIdException('Invalid content Id', null);
+        }
+      } catch (error) {
+        this.logger.error('Error validating contentId from Movie Service: ' + createMyListDto.contentId, error.stack);
+        throw new InvalidContentIdException('Invalid content Id', error.stack);
       }
     } else if (createMyListDto.contentType === 'TVShow') {
       const tvShow = await this.tvShowService.getTVShow(createMyListDto.contentId);
-      if (!tvShow) {
-        throw new InvalidContentIdException('Invalid Content Id', null);
+      try {
+        if (!tvShow) {
+          this.logger.error('Movie not found.Invalid content Id: ' + createMyListDto.contentId, "");
+          throw new InvalidContentIdException('Invalid Content Id', null);
+        }
+      } catch (error) {
+        this.logger.error('Error validating contentId from TVShow Service: ' + createMyListDto.contentId, error.stack);
+        throw new InvalidContentIdException('Invalid content Id', error.stack);
       }
-    } else {
+    }
+    else {
       throw new InvalidContentIdException('Invalid content type', null);
     }
+    
+    this.logger.log('ContentId validated successfully: ' + createMyListDto.contentId +'. Going to add item to Mylist');
 
     // Add the item to the user's list
     myList.items.push({ ...createMyListDto, dateAdded: new Date() });
     try {
+      
       await myList.save();
+      this.logger.debug(`Item added to list with Id ${myList._id} for userId: ${userId}` );
     } catch (error) {
       this.logger.error('Error saving MyList for user with id: ' + userId, error.stack);
       throw new DatabaseException(`Error while updateing MyList for user : ${userId}`, error);
@@ -145,7 +165,7 @@ export class MyListService {
   async listMyItems(userId: string, page: number): Promise<MyList> {
     this.logger.log(`Listing items for user with id: ${userId}`);
 
-    if(page < 1){
+    if (page < 1) {
       throw new InvalidPageNumberException('Invalid page number');
     }
 
@@ -157,8 +177,8 @@ export class MyListService {
         if (cachedItems) {
           this.logger.log(`Cache hit for user with id: ${userId}, page: ${page}, limit: 10`);
           return cachedItems;
-        }else{
-          this.logger.log(`Cache miss for user with id: ${userId}, page: ${page}, limit: 10. Fetching from database`);  
+        } else {
+          this.logger.log(`Cache miss for user with id: ${userId}, page: ${page}, limit: 10. Fetching from database`);
         }
       } catch (error) {
         this.logger.error('Error fetching from cache for user with id: ' + userId, error.stack);
@@ -179,7 +199,7 @@ export class MyListService {
       this.logger.error('Error fetching MyList for user with id: ' + userId, error.stack);
       throw new DatabaseException('Error fetching MyList for userId: ' + userId, error);
     }
-    
+
     const skip = (page - 1) * 10;
     this.logger.debug(`Fetching items for user with id: ${userId}, page: ${page}`);
     let items;
@@ -193,7 +213,7 @@ export class MyListService {
 
     if (this.enableRedisCache) {
       try {
-        
+
         await this.redisCacheService.put(cacheKey, items, 60 * this.cacheExpirationMinutes); // Cache the result for the configured time
         this.logger.log(`Saved to cache for user with id: ${userId}, page: ${page}`);
       } catch (error) {

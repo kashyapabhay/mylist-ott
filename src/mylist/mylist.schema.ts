@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 const ItemSchema = new Schema({
   contentId: { type: String, required: true },
   contentType: { type: String, enum: ['Movie', 'TVShow'], required: true },
-  dateAdded: { type: Date, default: Date.now, required: true },
+  dateAdded: { type: Date, default: Date.now, required: false },
 });
 
 export const MyListSchema = new Schema({

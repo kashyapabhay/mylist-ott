@@ -40,6 +40,7 @@ export class TVShowService {
       if (!tvShow) {
         throw new TVShowNotFoundException('TV Show not found');
       }
+      this.logger.log(`TV show with id: ${tvShowId} found`);
       return tvShow;
     } catch (error) {
       this.logger.error(`Error fetching TV show: ${error.message}`, error.stack);

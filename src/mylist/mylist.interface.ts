@@ -8,6 +8,7 @@ export interface Item {
 
 export interface MyList extends Document {
 
+  readonly _id: string;
   readonly userId: string;
   readonly items: Item[];
   readonly lastUpdated: Date;

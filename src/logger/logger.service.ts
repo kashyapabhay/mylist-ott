@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
+import * as dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables
 
 @Injectable()
 export class LoggerService {
@@ -10,7 +13,7 @@ export class LoggerService {
   constructor(context?: string) {
     this.context = context;
     this.logger = winston.createLogger({
-      level: 'info',
+      level: process.env.LOG_LEVEL || 'info', // Use log level from environment variable
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.printf(({ timestamp, level, message }) => {

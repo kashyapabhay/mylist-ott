@@ -60,5 +60,6 @@ The application is divided into multiple modules
 
 Impl pending
 Testcases for the controllers of respective modules
-
+Websocketapi module impl and integration with other modules
+ 
 

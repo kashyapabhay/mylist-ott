@@ -10,6 +10,7 @@ import { TVShowModule } from './tvshow/tvshow.module';
 import { MyListModule } from './mylist/mylist.module';
 import { AuthModule } from './auth/auth.module';
 import { RedisCacheModule } from './rediscache/redis.cache.module';
+import { WebSocketAPIModule } from './websocket/websocket.api.module';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ dotenv.config();
     MyListModule,
     AuthModule,
     RedisCacheModule,
+    WebSocketAPIModule,
     MongooseModule.forRoot(process.env.MONGODB_URI),
   ],
   controllers: [AppController],

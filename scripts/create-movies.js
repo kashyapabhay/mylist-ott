@@ -65,6 +65,6 @@ async function createMovies(count) {
   console.log('Finished creating movies and saving to CSV');
 }
 
-createMovies(1).then(() => {
+createMovies(100).then(() => {
   console.log('Script execution completed');
 });

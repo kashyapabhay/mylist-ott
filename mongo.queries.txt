@@ -67,11 +67,11 @@ db.createCollection("users", {
 
 3. create movies collecton using this command
 
-db.createCollection("movies", {
+  db.createCollection("movies", {
       validator: {
         $jsonSchema: {
           bsonType: "object",
-          required: ["id", "title", "description", "genres", "releaseDate", "director", "actors"],
+          required: [ "title", "description", "genres", "releaseDate", "director", "actors"],
           properties: {
             id: {
               bsonType: "string",

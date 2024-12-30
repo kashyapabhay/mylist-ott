@@ -1,0 +1,219 @@
+
+1.  create a new database say testing using mongoosh from terminal
+ use testing
+2. create users collection
+
+db.createCollection("users", {
+      validator: {
+        $jsonSchema: {
+          bsonType: "object",
+          required: [ "username"],
+          properties: {
+            id: {
+              bsonType: "string",
+              description: "Unique identifier for the user (required)"
+            },
+            username: {
+              bsonType: "string",
+              description: "Username of the user (required)"
+            },
+            preferences: {
+              bsonType: "object",
+              properties: {
+                favoriteGenres: {
+                  bsonType: "array",
+                  items: {
+                    bsonType: "string"
+                  },
+                  description: "List of favorite genres (optional array of strings)"
+                },
+                dislikedGenres: {
+                  bsonType: "array",    
+                  items: {
+                    bsonType: "string"
+                  },
+                  description: "List of disliked genres (optional array of strings)"
+                }
+              },
+              description: "User preferences (optional object)"
+            },
+            watchHistory: {
+              bsonType: "array",
+              items: {
+                bsonType: "object",
+                properties: {
+                  contentId: {
+                    bsonType: "string",
+                    description: "ID of the watched content (required)"
+                  },
+                  watchedOn: {
+                    bsonType: "date",
+                    description: "Date when the content was watched (required)"
+                  },
+                  rating: {
+                    bsonType: "int",
+                    minimum: 1,
+                    maximum: 5,
+                    description: "Optional rating for the content (1-5)"
+                  }
+                }
+              },
+              description: "Array of watch history items (optional)"
+            }
+          }
+        }
+      }
+    });
+
+3. create movies collecton using this command
+
+db.createCollection("movies", {
+      validator: {
+        $jsonSchema: {
+          bsonType: "object",
+          required: ["id", "title", "description", "genres", "releaseDate", "director", "actors"],
+          properties: {
+            id: {
+              bsonType: "string",
+              description: "Unique identifier for the movie (required)"
+            },
+            title: {
+              bsonType: "string",
+              description: "Title of the movie (required)"
+            },
+            description: {
+              bsonType: "string",
+              description: "Description of the movie (required)"
+            },
+            genres: {
+              bsonType: "array",
+              items: {
+                bsonType: "string"
+              },
+              description: "List of genres (required array of strings)"
+            },
+            releaseDate: {
+              bsonType: "date",
+              description: "Release date of the movie (required)"
+            },
+            director: {
+              bsonType: "string",
+              description: "Director of the movie (required)"
+            },
+            actors: {
+              bsonType: "array",
+              items: {
+                bsonType: "string"
+              },
+              description: "List of actors (required array of strings)"
+            }
+          }
+        }
+      }
+    });
+
+    4. create the tvshow collection using this query
+
+    db.createCollection("tvshows", {
+      validator: {
+        $jsonSchema: {
+          bsonType: "object",
+          required: [ "title", "description", "genres"],
+          properties: {
+            
+            title: {
+              bsonType: "string",
+              description: "Title of the TV show (required)"
+            },
+            description: {
+              bsonType: "string",
+              description: "Description of the TV show (required)"
+            },
+            genres: {
+              bsonType: "array",
+              items: {
+                bsonType: "string"
+              },
+              description: "List of genres (required array of strings)"
+            },
+            episodes: {
+              bsonType: "array",
+              items: {
+                bsonType: "object",
+                properties: {
+                  episodeNumber: {
+                    bsonType: "int",
+                    description: "Episode number (required)"
+                  },
+                  seasonNumber: {
+                    bsonType: "int",
+                    description: "Season number (required)"
+                  },
+                  releaseDate: {
+                    bsonType: "date",
+                    description: "Release date of the episode (required)"
+                  },
+                  director: {
+                    bsonType: "string",
+                    description: "Director of the episode (required)"
+                  },
+                  actors: {
+                    bsonType: "array",
+                    items: {
+                      bsonType: "string"
+                    },
+                    description: "List of actors (required array of strings)"
+                  }
+                }
+              },
+              description: "List of episodes (required array of objects)"
+            }
+          }
+        }
+      }
+    });
+5. mylists collection using this query
+
+db.createCollection("mylist", {
+      validator: {
+        $jsonSchema: {
+          bsonType: "object",
+          required: ["userId", "items"],
+          properties: {
+            userId: {
+              bsonType: "string",
+              description: "Unique identifier for the user (required)"
+            },
+            items: {
+              bsonType: "array",
+              items: {
+                bsonType: "object",
+                required: ["contentId", "contentType", "dateAdded"],
+                properties: {
+                  contentId: {
+                    bsonType: "string",
+                    description: "Unique identifier for the content (required)"
+                  },
+                  contentType: {
+                    bsonType: "string",
+                    enum: ["Movie", "TVShow"],
+                    description: "Type of content (required, must be 'Movie' or 'TVShow')"
+                  },
+                  dateAdded: {
+                    bsonType: "date",
+                    description: "Date when the content was added (required)"
+                  }
+                }
+              },
+              description: "Array of items (required)"
+            }
+          }
+        }
+      }
+    });
+
+    6. add indexes on mylist collection
+    i -> on user_id
+     db.mylist.createIndex({ userId: 1 });
+    ii) -> Create a compound unique index on userId and items.contentId to ensure uniqueness
+    db.mylist.createIndex({ userId: 1, 'items.contentId': 1 },{ unique: true });

@@ -53,6 +53,9 @@ The application is divided into multiple modules
 10. # Controller error handling
     customer exception fitlers are added for each controller so that they can send http response code in case of exception. We are using 512 http error code for system identifiable errors. For rest of the exception we are still using 500
 
+11. # Test cases
+    All the test caes are put in the test folder for respective service. 
+
 
 
 

@@ -20,7 +20,7 @@ ENABLE_REDIS_CACHE=false
 REDIS_URL=redis://localhost:6379
 //keep the ENABLE_REDIS_CACHE flag to false if you do not want to use redis caching.
 
-6. create database schema using the queries given in mongo-queries.txt
+6. create database schema using the queries given in mongo-queries.txt #optional the application also take cares of creation of default table
 
 7. try to start the application using npm run start . Application should be running on configured port
 

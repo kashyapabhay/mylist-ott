@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Client</title>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
+</head>
+<body>
+  <h1>WebSocket Client</h1>
+  <button id="createUser">Create User</button>
+  <button id="addToMyList">Add to My List</button>
+  <button id="createMovie">Create Movie</button>
+  <pre id="response"></pre>
+
+  <script>
+    // Connect to the WebSocket server
+    const socket = io('http://127.0.0.1:3000');
+
+    // Listen for API responses from the server
+    socket.on('apiResponse', (response) => {
+      console.log(`Received API response: ${JSON.stringify(response)}`);
+      document.getElementById('response').textContent = JSON.stringify(response, null, 2);
+    });
+
+    // Listen for API errors from the server
+    socket.on('apiError', (error) => {
+      console.error(`Received API error: ${JSON.stringify(error)}`);
+      document.getElementById('response').textContent = `Error: ${JSON.stringify(error, null, 2)}`;
+    });
+    document.getElementById('addToMyList').disabled = true;
+    document.getElementById('createMovie').disabled = true;
+
+    // Send an API request to create a user
+    document.getElementById('createUser').addEventListener('click', () => {
+      const apiRequest = {
+        requestServiceName: 'UserService',
+        requestAPIName: 'createUser',
+        requestId: '12345',
+        dataJson: {
+          username: 'john_doe',
+          preferences: {
+            favoriteGenres: ['Action'],
+            dislikedGenres: ['Horror'],
+          },
+          watchHistory: [],
+        },
+      };
+      socket.emit('apiRequest', apiRequest);
+    });
+
+    // Send an API request to add an item to My List
+    document.getElementById('addToMyList').addEventListener('click', () => {
+      const apiRequest = {
+        requestServiceName: 'MyListService',
+        requestAPIName: 'addToMyList',
+        requestId: '12346',
+        dataJson: {
+          userId: '1',
+          createMyListDto: {
+            contentId: 'movie123',
+            contentType: 'Movie',
+            dateAdded: new Date(),
+          },
+        },
+      };
+      socket.emit('apiRequest', apiRequest);
+    });
+
+    // Send an API request to create a movie
+    document.getElementById('createMovie').addEventListener('click', () => {
+      const apiRequest = {
+        requestServiceName: 'MovieService',
+        requestAPIName: 'createMovie',
+        requestId: '12347',
+        dataJson: {
+          title: 'Example Movie',
+          description: 'This is an example movie.',
+          genres: ['Action', 'Drama'],
+          releaseDate: new Date(),
+          director: 'John Doe',
+          actors: ['Actor One', 'Actor Two'],
+        },
+      };
+      socket.emit('apiRequest', apiRequest);
+    });
+  </script>
+</body>
+</html>

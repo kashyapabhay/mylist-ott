@@ -38,7 +38,7 @@ The application is divided into multiple modules
 5.  Auth module - for authenticaton layer. Currently JWT for authenticating. JWT guards had been added in all apis.  We have by passed token authentication via hard coding for testing purpose. Test token is already added in the data generation scripts.
 6. Exception folder : to keep certain global exception like database exception that can be used in my module.
 7. Redis cache module : to expose a redis caching service. Not yet tested. And option to bypass caching layer has been added. In current impl we are not nestjs cachemodule. It had certain issues in the current version.
-8. websocket module - it export gateway service to integrate the incoming api request on weboscket connectino to right microservice; Impl is not yet complete.
+8. websocket module - it export gateway service to integrate the incoming api request on weboscket connectino to right microservice; Impl (POC level)and integration for one api create user of User service is complete. 
 
 9. # APIs
     We have implemented custom errorcode in the application. Every service error starts with some diff code e.g
@@ -56,7 +56,7 @@ The application is divided into multiple modules
 11. # Test cases
     All the test caes are put in the test folder for respective service. 
 
-
+12. # Web
 
 Impl pending
 Testcases for the controllers of respective modules

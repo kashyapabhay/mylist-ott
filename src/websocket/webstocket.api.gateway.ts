@@ -111,15 +111,16 @@ export class WebSocketAPIGateway implements OnModuleInit, OnModuleDestroy, OnGat
         console.log(`apiName: ${apiName} data : ${JSON.stringify(data)}`);
         switch (apiName) {
             case 'createUser':
-                const createUserDto = plainToClass(CreateUserDto, JSON.stringify(data));
-                console.log(`userservice: ${this.userService}`);
+                console.log(`Going to create user`);
+                const createUserDto = plainToClass(CreateUserDto, data);
+                console.log(`Create user dto: ${createUserDto.username }`);
                 return this.userService.addUser(createUserDto);
             // case 'updateUser':
             //     return this.userService.update(data.id, data.updateUserDto);
             // case 'findUser':
             //     return this.userService.findOne(data.id);
             default:
-                throw new Error('Unknown API name');
+                throw new Error('Unknown API name');    
         }
     }
 

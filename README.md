@@ -11,7 +11,7 @@
 
  5. add the following to your .env file
 PORT=3000
-MONGODB_URI=mongodb+srv://dev:terminator_89@learning.y1x76.mongodb.net/test?retryWrites=true&w=majority
+MONGODB_URI="URL"
 // USE THE mongo url along with db name
 #mylist service cofig
 MYLIST_CACHE_INTERVAL=720 # in minutes

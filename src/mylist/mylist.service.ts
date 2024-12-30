@@ -16,6 +16,7 @@ import { DatabaseException } from 'src/exceptions/database.exception';
 import { ContentType } from './mylist.enum';
 import { InvaldMovieIdException } from 'src/movie/exceptions/invalid.movie.id.exception';
 import { InvalidTVShowIdException } from 'src/tvshow/exceptions/invalid.tvshow.id.exception';
+import { InvalidPageNumberException } from './exceptions/invalid.page.no.exception';
 
 @Injectable()
 export class MyListService {
@@ -35,6 +36,13 @@ export class MyListService {
 
   }
 
+  async getEnableRedisCache(): Promise<boolean> {
+    return this.enableRedisCache;
+  }
+
+  async getCacheExpirationMinutes(): Promise<number> {
+    return this.cacheExpirationMinutes;
+  }
 
   async addToMyList(createMyListDto: CreateMyListDto): Promise<MyList> {
     this.logger.log('Adding item to MyList for user with id: ' + createMyListDto.userId + 'and contentId: ' + createMyListDto.contentId);
@@ -50,7 +58,7 @@ export class MyListService {
       myList = await this.myListModel.findOne({ userId });
       if (!myList) {
         this.logger.debug('MyList not found for user with id: ' + userId + '. Creating a new one');
-        myList = new this.myListModel({ userId, items: [] });
+        myList =  this.myListModel.create({ userId, items: [] });
       }
     } catch (error) {
       this.logger.error('Error fetching MyList for user with id: ' + userId, error.stack);
@@ -130,19 +138,27 @@ export class MyListService {
     return myList;
   }
 
-  async listMyItems(userId: string, page: number): Promise<MyList[]> {
-    const limit = 10;
+
+  private getCacheKey(userId: string, page: number, limit: number): string {
+    return `mylist:${userId}:${page}:${limit}`;
+  }
+  async listMyItems(userId: string, page: number): Promise<MyList> {
     this.logger.log(`Listing items for user with id: ${userId}`);
 
-    const cacheKey = `mylist:${userId}:${page}:${limit}`;
+    if(page < 1){
+      throw new InvalidPageNumberException('Invalid page number');
+    }
+
+    const cacheKey = this.getCacheKey(userId, page, 10);
+
     if (this.enableRedisCache) {
       try {
         const cachedItems = await this.redisCacheService.get(cacheKey);
         if (cachedItems) {
-          this.logger.log(`Cache hit for user with id: ${userId}, page: ${page}, limit: ${limit}`);
+          this.logger.log(`Cache hit for user with id: ${userId}, page: ${page}, limit: 10`);
           return cachedItems;
         }else{
-          this.logger.log(`Cache miss for user with id: ${userId}, page: ${page}, limit: ${limit}. Fetching from database`);  
+          this.logger.log(`Cache miss for user with id: ${userId}, page: ${page}, limit: 10. Fetching from database`);  
         }
       } catch (error) {
         this.logger.error('Error fetching from cache for user with id: ' + userId, error.stack);
@@ -164,22 +180,22 @@ export class MyListService {
       throw new DatabaseException('Error fetching MyList for userId: ' + userId, error);
     }
     
-    const skip = (page - 1) * limit;
-    this.logger.debug(`Fetching items for user with id: ${userId}, page: ${page}, limit: ${limit}`);
+    const skip = (page - 1) * 10;
+    this.logger.debug(`Fetching items for user with id: ${userId}, page: ${page}`);
     let items;
     try {
-      items = await this.myListModel.find({ userId }).skip(skip).limit(limit).exec();
+      items = await this.myListModel.find({ userId }).skip(skip).limit(10);
       this.logger.debug('Items fetched successfully for user with id: ' + userId);
     } catch (error) {
       this.logger.error('Error fetching items for user with id: ' + userId, error.stack);
-      throw new InternalServerErrorException('Error fetching items');
+      throw new DatabaseException('Error fetching items from database for userId: ' + userId, error);
     }
 
     if (this.enableRedisCache) {
       try {
         
         await this.redisCacheService.put(cacheKey, items, 60 * this.cacheExpirationMinutes); // Cache the result for the configured time
-        this.logger.log(`Saved to cache for user with id: ${userId}, page: ${page}, limit: ${limit}`);
+        this.logger.log(`Saved to cache for user with id: ${userId}, page: ${page}`);
       } catch (error) {
         this.logger.error('Error saving to cache for user with id: ' + userId, error.stack);
       }

@@ -8,7 +8,11 @@ export class InvalidContentIdException extends MyListServiceBaseException {
     super(INVALID_CONTENT_ID_ERROR, message);
     this.name = "InvalidContentIdException";
     this.message = message;
-    this.stack = error.stack;
+    if (error !== null) {
+      this.stack = error.stack;
+    }else {
+      this.stack = new Error().stack;
+    }
   }
 
 }

@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, HttpException, HttpStatus, UseFilters } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.interface';
 import { LoggerService } from 'src/logger/logger.service';
+import { UserServiceExceptionFilter } from './exceptions/user.service.exception.filter';
 
+@UseFilters(UserServiceExceptionFilter)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService,

@@ -17,6 +17,7 @@ import { ContentType } from './mylist.enum';
 import { InvaldMovieIdException } from 'src/movie/exceptions/invalid.movie.id.exception';
 import { InvalidTVShowIdException } from 'src/tvshow/exceptions/invalid.tvshow.id.exception';
 import { InvalidPageNumberException } from './exceptions/invalid.page.no.exception';
+import { InvalidContentTypeException } from './exceptions/invalid.content.type.excepton';
 
 @Injectable()
 export class MyListService {
@@ -94,7 +95,7 @@ export class MyListService {
       }
     }
     else {
-      throw new InvalidContentIdException('Invalid content type', null);
+      throw new InvalidContentTypeException('Invalid content type');
     }
     
     this.logger.log('ContentId validated successfully: ' + createMyListDto.contentId +'. Going to add item to Mylist');

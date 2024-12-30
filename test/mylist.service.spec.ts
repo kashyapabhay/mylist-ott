@@ -2,6 +2,7 @@ import { skip } from "node:test";
 import { DatabaseException } from "src/exceptions/database.exception";
 import { InvaldMovieIdException } from "src/movie/exceptions/invalid.movie.id.exception";
 import { InvalidContentIdException } from "src/mylist/exceptions/invalid.content.id.exception";
+import { InvalidContentTypeException } from "src/mylist/exceptions/invalid.content.type.excepton";
 import { InvalidPageNumberException } from "src/mylist/exceptions/invalid.page.no.exception";
 import { CreateMyListDto } from "src/mylist/mylist.dto";
 import { ContentType } from "src/mylist/mylist.enum";
@@ -532,9 +533,10 @@ describe('MyListService', () => {
   });
 
   // Handle invalid content types
-  it('should throw InvalidContentIdException when content type is invalid', async () => {
+  it('should throw InvalidContentTypeException when content type is invalid', async () => {
+    const mockMylist ={ "userId": "user123", "items": [] };
     const mockMyListModel = {
-      findOne: jest.fn().mockResolvedValue(null),
+      findOne: jest.fn().mockResolvedValue(mockMylist),
       create: jest.fn(),
     };
 
@@ -567,7 +569,7 @@ describe('MyListService', () => {
 
     const createMyListDto = new CreateMyListDto('user123', 'invalidContentId', 'InvalidType' as any);
 
-    await expect(service.addToMyList(createMyListDto)).rejects.toThrow(InvalidContentIdException);
+    await expect(service.addToMyList(createMyListDto)).rejects.toThrow(InvalidContentTypeException);
   });
 
   // Cache expiration and refresh behavior
